@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Land.IA - Pitch Deck</title>
+    <!-- Carrega o Tailwind CSS para estilos rápidos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        /* O contêiner principal da apresentação */
+        #presentation-container {
+            width: 100%;
+            max-width: 1100px; /* Largura padrão de slide (16:9) */
+            aspect-ratio: 16 / 9;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #111;
+        }
+
+        /* Estilo base de cada slide */
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+            transform: scale(0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5% 7%;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        /* Estilo do slide ativo (visível) */
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        /* Controles de navegação */
+        #navigation-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 16px;
+            z-index: 100;
+        }
+        #navigation-controls button {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        #navigation-controls button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        #navigation-controls button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        #slide-counter {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: #ccc;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        
+        /* Helpers de layout */
+        .three-columns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+        }
+        
+        /* Estilos de Tipografia */
+        h1 {
+            font-size: 3.5rem; /* 56px */
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-size: 2.25rem; /* 36px */
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #4ade80; /* Verde neon para títulos de slide */
+        }
+        h3 {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #f5f5f5;
+        }
+        p, li {
+            font-size: 1.1rem; /* 18px */
+            color: #d4d4d4;
+            line-height: 1.6;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            text-align: left;
+        }
+        .tagline {
+            font-size: 1.5rem; /* 24px */
+            color: #a3a3a3;
+        }
+        .subtitle {
+            font-size: 1.75rem; /* 28px */
+            color: #e5e5e5;
+            font-weight: 600;
+        }
+        
+        /* Placeholder para o quadrante de competição */
+        .quadrant-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            width: 90%;
+            height: 400px;
+            border-left: 2px solid #555;
+            border-bottom: 2px solid #555;
+            position: relative;
+        }
+        .quadrant {
+            padding: 1rem;
+            border-right: 2px dashed #333;
+            border-top: 2px dashed #333;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .quadrant h3 { font-size: 1rem; color: #fff; }
+        .quadrant-label-x { position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); }
+        .quadrant-label-y { position: absolute; left: -100px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+
+        /* Estilo para as imagens do time */
+        .team-member img {
+            width: 120px; /* Tamanho fixo para as fotos */
+            height: 120px;
+            object-fit: cover; /* Garante que a imagem cubra o círculo sem distorcer */
+            object-position: center; /* Centraliza a foto */
+            border-radius: 50%; /* Imagens circulares */
+            margin: 0 auto 1rem;
+            border: 3px solid #4ade80; /* Borda para destaque */
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.4); /* Sombra neon */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- O Container da Apresentação -->
+    <div id="presentation-container">
+
+        <!-- Slide 1: A Capa (O Gancho) -->
+        <div class="slide active">
+            <h1 class="text-green-400">Land.IA</h1>
+            <p class="subtitle">De Semanas de Incerteza para Minutos de Decisão.</p>
+            <p class="tagline mt-4">O Co-Piloto de IA para Desenvolvimento Imobiliário.</p>
+        </div>
+
+        <!-- Slide 2: O Problema (A Dor do Mercado) -->
+        <div class="slide">
+            <h2>O Problema</h2>
+            <p class="subtitle">A Decisão Mais Cara do Mercado é Tomada às Cegas.</p>
+            <div class="three-columns mt-8 text-left">
+                <div>
+                    <h3>CUSTO</h3>
+                    <p>Due Diligence tradicional pode consumir até 1% do VGV do empreendimento.</p>
+                </div>
+                <div>
+                    <h3>TEMPO</h3>
+                    <p>Um estudo de viabilidade completo leva de 4 a 8 semanas. Tempo que o concorrente usa para comprar o terreno.</p>
+                </div>
+                <div>
+                    <h3>RISCO</h3>
+                    <p>Um erro na análise (zoneamento, solo, ambiental) pode inviabilizar o projeto, gerando prejuízos irreversíveis.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: A Solução (Fracassada) Atual -->
+        <div class="slide">
+            <h2>A Solução (Fracassada) Atual</h2>
+            <p class="subtitle">O Quebra-Cabeça dos Dados Imobiliários.</p>
+            <p class="mt-4">O problema não é a falta de dados, mas sim que eles são impossíveis de conectar.</p>
+            <ul class="mt-6 max-w-2xl mx-auto">
+                <li><b>Dados Fragmentados:</b> Prefeituras (Zoneamento), Cartórios (Matrículas), Órgãos Ambientais (Restrições).</li>
+                <li><b>Dados Não-Estruturados:</b> Informações "presas" em PDFs de 500 páginas (Planos Diretores) e documentos legais.</li>
+                <li><b>Dados Obscuros e Analógicos:</b> Muitas informações simplesmente não estão digitalizadas.</li>
+            </ul>
+        </div>
+        
+        <!-- Slide 4: A Nossa Solução: Land.IA -->
+        <div class="slide">
+            <h2>A Nossa Solução</h2>
+            <p class="subtitle">O Primeiro Co-Piloto de IA para Viabilidade de Terrenos.</p>
+            <p class="mt-4">Nós transformamos o caos de dados (Slide 3) em respostas lucrativas e instantâneas.</p>
+            <!-- Placeholder visual: Um "print" simulado do chatbot -->
+            <div class="mt-6 p-6 bg-gray-800 rounded-lg shadow-lg w-full max-w-3xl text-left">
+                <p class="text-green-400 font-mono"><b>Usuário:</b> "Quero construir um hospital em Fortaleza, com 5.000m², perto de avenidas."</p>
+                <p class="text-white font-mono mt-4"><b>Land.IA:</b> "Analisando... Encontrei 3 terrenos ideais. O Terreno A (Av. Santos Dumont) tem o melhor potencial de mercado e solo compatível, com custo de fundação estimado em R$ Z. O Terreno B (Av. Bezerra) tem solo argiloso, aumentando o custo em 20%. Recomendo o Terreno A. [Gerar Relatório Completo]"</p>
+            </div>
+        </div>
+        
+        <!-- Slide 5: Nossas Funcionalidades (Os 3 Pilares) -->
+        <div class="slide">
+            <h2>Nossas Funcionalidades (Os 3 Pilares)</h2>
+            <div class="three-columns mt-8 text-left">
+                <div>
+                    <h3 class="text-green-400">1. Análise de Viabilidade (Terreno -> Lucro)</h3>
+                    <p>"Eu tenho este terreno. O que posso fazer e quanto vou lucrar?"</p>
+                    <p class="text-sm mt-2 text-gray-400">Análise instantânea de zoneamento, VGV e custos.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400">2. "Highest and Best Use" (Terreno -> Melhor Projeto)</h3>
+                    <p>"Qual o melhor empreendimento possível para este terreno?"</p>
+                    <p class="text-sm mt-2 text-gray-400">Nossa IA simula cenários (residencial, comercial) e recomenda o projeto de maior ROI.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400">3. Prospecção Ativa (Projeto -> Terreno)</h3>
+                    <p>"Quero construir um galpão logístico. Onde está o melhor terreno?"</p>
+                    <p class="text-sm mt-2 text-gray-400">O cliente insere as necessidades e nossa IA varre a cidade, ranqueando os melhores terrenos.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: O Nosso Diferencial (Revisado) -->
+        <div class="slide">
+            <h2>O Nosso Diferencial</h2>
+            <p class="subtitle">Não Somos (só) Mercado. Somos Engenharia.</p>
+            <p class="mt-4">Concorrentes analisam o *mercado* (o que vender). Nossa IA analisa o *solo* (onde construir e a que custo).</p>
+            <div class="three-columns mt-8 text-left">
+                <div>
+                    <h3 class="text-green-400">Engenharia/Geologia</h3>
+                    <p>Previsão de custo de fundação baseado no tipo de solo. A camada que as plataformas de mercado não têm.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400">Mercado</h3>
+                    <p>Análise de VGV, VSO, demanda e concorrência (o que as plataformas atuais fazem).</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400">Mercado</h3>
+                    <p>Análise de VGV, VSO, demanda e concorrência (o que o Hiperdados faz).</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400">A Fusão (Land.IA)</h3>
+                    <p>A única IA que **funde** os dados de Engenharia com os de Mercado para uma decisão de lucro máximo.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: A Oportunidade (O Tamanho do Mercado) -->
+        <div class="slide">
+            <h2>A Oportunidade</h2>
+            <p class="subtitle">Um Mercado de Bilhões, Gerenciado por Planilhas.</p>
+            <ul class="mt-6 max-w-3xl mx-auto text-left space-y-3">
+                <li><b>TAM:</b> VGV de lançamentos imobiliários no Brasil atingiu <b>R$ 215 Bilhões</b> nos últimos 12 meses.</li>
+                <li><b>GAP:</b> O setor de PropTech cresce, mas 90% das soluções focam em Vendas ou Gestão.</li>
+                <li><b>NOSSO FOCO:</b> A etapa de <b>Prospecção e Viabilidade</b> — a mais arriscada e de maior capital — é a mais carente de tecnologia.</li>
+            </ul>
+        </div>
+        
+        <!-- Slide 8: Modelo de Negócio (Como Ganhamos Dinheiro) -->
+        <div class="slide">
+            <h2>Modelo de Negócio</h2>
+            <p class="subtitle">SaaS B2B: Foco em Receita Recorrente</p>
+            <div class="three-columns mt-8 text-left">
+                <div>
+                    <h3 class="text-green-400">Tier 1: PRO</h3>
+                    <p><b>Para:</b> Construtoras e Incorporadoras.</p>
+                    <p><b>Preço:</b> R$ X.XXX /mês</p>
+                    <p class="text-sm mt-2 text-gray-400">Análises ilimitadas, relatórios, os 3 pilares de funcionalidade.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400">Tier 2: ENTERPRISE</h3>
+                    <p><b>Para:</b> Grandes Fundos Imobiliários e "Land Banks".</p>
+                    <p><b>Preço:</b> Customizado</p>
+                    <p class="text-sm mt-2 text-gray-400">Acesso via API, dashboards de portfólio, análises preditivas.</p>
+                </div>
+                <div>
+                    <h3 class="text-green-400">Tier 3: PAY-PER-USE</h3>
+                    <p><b>Para:</b> Arquitetos e Corretores.</p>
+                    <p><b>Preço:</b> R$ XXX / relatório</p>
+                    <p class="text-sm mt-2 text-gray-400">Relatório de viabilidade pontual.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 9: Competição (Novo Slide) -->
+        <div class="slide">
+            <h2>Análise Competitiva</h2>
+            <p class="subtitle">Um Quebra-Cabeça que Só Nós Montamos</p>
+            <div class="quadrant-grid mt-4">
+                <span class="quadrant-label-y text-sm text-gray-400">Inteligência de Mercado</span>
+                <span class="quadrant-label-x text-sm text-gray-400">Inteligência de Engenharia/Geologia</span>
+                
+                <div class="quadrant">
+                    <h3 class="text-yellow-400">Plataformas de Mercado</h3>
+                    <p>Excelentes em Mercado (VGV, VSO), mas "cegos" para os riscos e custos do subsolo.</p>
+                </div>
+                <div class="quadrant border-r-0">
+                    <h3 class="text-green-400">Land.IA</h3>
+                    <p><b>A única plataforma</b> que une Inteligência de Mercado com Inteligência de Engenharia.</p>
+                </div>
+                <div class="quadrant border-b-0">
+                    <h3 class="text-gray-500">ERPs / Gestão (Pelli, Senior)</h3>
+                    <p>Foco na gestão *pós-decisão*. Ajudam a *construir*, não a *decidir* o terreno.</p>
+                </div>
+                <div class="quadrant border-b-0 border-r-0">
+                    <h3 class="text-blue-400">Consultorias Tradicionais</h3>
+                    <p>Alta qualidade técnica (geologia), mas lentas, caras e analógicas. Sem escala.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Tração / Go-to-Market -->
+        <div class="slide">
+            <h2>Tração & Go-to-Market</h2>
+            <p class="subtitle">Validando a Demanda e Crescendo</p>
+            <div class="w-full flex gap-8 text-left mt-8">
+                <div class="w-1/2">
+                    <h3 class="text-green-400">Tração Inicial (Nosso Foco)</h3>
+                    <ul class="list-disc ml-5 space-y-2">
+                        <li>"X construtoras em nosso projeto piloto."</li>
+                        <li>"Feedback do Beta: Reduzimos o tempo de análise de 6 semanas para 2 horas."</li>
+                        <li>"Lista de espera com X empresas interessadas."</li>
+                    </ul>
+                </div>
+                <div class="w-1/2">
+                    <h3 class="text-green-400">Estratégia de Aquisição</h3>
+                    <ul class="list-disc ml-5 space-y-2">
+                        <li><b>Fase 1 (Cabeça de Ponte):</b> Venda direta (B2B) para construtoras de médio porte e parcerias (Sinduscon).</li>
+                        <li><b>Fase 2 (Autoridade):</b> Marketing de conteúdo com nossos dados ("Os 10 bairros com melhor solo para construir").</li>
+                        <li><b>Fase 3 (Expansão):</b> Atender Fundos Imobiliários.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: O Time (Por que Nós?) - CORRIGIDO -->
+        <div class="slide">
+            <h2>O Time</h2>
+            <p class="subtitle">Os Especialistas por Trás da IA</p>
+            <div class="three-columns mt-8 text-center">
+                <div class="team-member">
+                    <!-- Foto do Gabriel (CEO) -->
+                    <!-- SUBSTITUA O 'SRC' ABAIXO PELO SEU LINK RAW DO GITHUB -->
+                    <img src="https://raw.githubusercontent.com/seu-usuario/seu-repo/main/file.jpeg" alt="Foto de Gabriel Santabaia" class="team-member">
+                    <h3 class="text-green-400">Gabriel Santabaia - CEO</h3>
+                    <p class="text-sm">O Visionário. 2 anos de experiência em mercado imobiliário e investimento em terrenos.</p>
+                </div>
+                <div class="team-member">
+                    <!-- Foto do Saulo (CPO) -->
+                    <!-- SUBSTITUA O 'SRC' ABAIXO PELO SEU LINK RAW DO GITHUB -->
+                    <img src="https://raw.githubusercontent.com/seu-usuario/seu-repo/main/file3.jpeg" alt="Foto de Saulo" class="team-member">
+                    <h3 class="text-green-400">Saulo - CPO / Head de Dados</h3>
+                    <p class="text-sm">O Estrategista. Focado em construir nosso "fosso" de dados (geológicos, mercadológicos, legais).</p>
+                </div>
+                <div class="team-member">
+                    <!-- Foto do Catunda (CTO) -->
+                    <!-- SUBSTITUA O 'SRC' ABAIXO PELO SEU LINK RAW DO GITHUB -->
+                    <img src="https://raw.githubusercontent.com/seu-usuario/seu-repo/main/file 2.jpeg" alt="Foto de Catunda" class="team-member">
+                    <h3 class="text-green-400">Catunda - CTO</h3>
+                    <p class="text-sm">O Construtor. Especialista em IA e Big Data. A força técnica para construir nosso motor de análise.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 12: O Pedido (O "Ask") -->
+        <div class="slide">
+            <h2>O Pedido (O "Ask")</h2>
+            <p class="subtitle">Estamos buscando: R$ X Milhões (Seed)</p>
+            <p class="mt-4">Para atingir R$ Y de ARR (Receita Anual Recorrente) em 18 meses.</p>
+            <div class="w-full flex gap-8 text-left mt-8">
+                <div class="w-1/2">
+                    <h3 class="text-green-400">Alocação dos Recursos:</h3>
+                    <ul class="list-disc ml-5 space-y-2">
+                        <li><b>40% - Desenvolvimento de Produto:</b> Expandir base de dados (novas cidades) e refinar IA geológica.</li>
+                        <li><b>35% - Vendas e Marketing:</b> Contratar time de vendas B2B e acelerar aquisição.</li>
+                        <li><b>25% - Operações:</b> Custos de infraestrutura de dados.</li>
+                    </ul>
+                </div>
+                <div class="w-1/2">
+                    <h3 class="text-green-400">Metas (O que faremos):</h3>
+                    <ul class="list-disc ml-5 space-y-2">
+                        <li>Lançamento em 2 capitais.</li>
+                        <li>Atingir X clientes pagantes (Assinatura PRO).</li>
+                        <li>Validar o "fosso" de dados geológicos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: O Fechamento -->
+        <div class="slide">
+            <h1 class="text-green-400">Vamos Construir o Futuro do Mercado Imobiliário.</h1>
+            <p class="subtitle mt-8">Land.IA</p>
+            <p classs="tagline mt-4">Gabriel Santabaia</p>
+            <p class="tagline">[Email]</p>
+            <p class="tagline">[Telefone]</p>
+        </div>
+
+    </div>
+
+    <!-- Controles de Navegação -->
+    <div id="navigation-controls">
+        <button id="prev-slide">← Anterior</button>
+        <div id="slide-counter">1 / 13</div>
+        <button id="next-slide">Próximo →</button>
+    </div>
+
+    <script>
+        // Adiciona o listener quando o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevButton = document.getElementById('prev-slide');
+            const nextButton = document.getElementById('next-slide');
+            const slideCounter = document.getElementById('slide-counter');
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            function showSlide(index) {
+                // Esconde o slide atual
+                if (slides[currentSlide]) {
+                     slides[currentSlide].classList.remove('active');
+                }
+                
+                // Garante que o índice esteja dentro dos limites
+                currentSlide = (index + totalSlides) % totalSlides;
+                
+                // Mostra o novo slide
+                if (slides[currentSlide]) {
+                    slides[currentSlide].classList.add('active');
+                }
+                
+                // Atualiza o contador
+                if (slideCounter) {
+                    slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+                }
+                
+                // Gerencia os botões
+                if (prevButton) {
+                    prevButton.disabled = currentSlide === 0;
+                }
+                if (nextButton) {
+                    nextButton.disabled = currentSlide === totalSlides - 1;
+                }
+            }
+
+            // Event listener para o botão "Próximo"
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    if (currentSlide < totalSlides - 1) {
+                        showSlide(currentSlide + 1);
+                    }
+                });
+            }
+
+            // Event listener para o botão "Anterior"
+            if (prevButton) {
+                prevButton.addEventListener('click', () => {
+                    if (currentSlide > 0) {
+                        showSlide(currentSlide - 1);
+                    }
+                });
+            }
+
+            // Event listener para as teclas de seta
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'ArrowRight' || event.key === ' ') {
+                    // Vai para o próximo slide
+                    if (currentSlide < totalSlides - 1) {
+                        showSlide(currentSlide + 1);
+                    }
+                } else if (event.key === 'ArrowLeft') {
+                    // Vai para o slide anterior
+                    if (currentSlide > 0) {
+                        showSlide(currentSlide - 1);
+                    }
+                }
+            });
+
+            // Inicializa a apresentação
+            showSlide(currentSlide);
+        });
+    </script>
+</body>
+</html>
+
+
